@@ -1,6 +1,6 @@
 import {
-  LOGIN_FACEBOOK_REQUEST, LOGIN_FACEBOOK_SUCCESS, LOGIN_FACEBOOK_FAILURE,
-  LOGIN_GOOGLE_REQUEST, LOGIN_GOOGLE_SUCCESS, LOGIN_GOOGLE_FAILURE,
+  LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE,
+  SIGNUP_REQUEST, SIGNUP_SUCCESS, SIGNUP_FAILURE,
   CHECK_LOGIN_REQUEST, CHECK_LOGIN_SUCCESS, CHECK_LOGIN_FAILURE,
   LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE
 } from '../actionTypes';
@@ -18,8 +18,7 @@ const authReducer = (state = authInitialState, action) => {
         ...state,
         loggedIn: action.loggedIn,
         isLoading: action.isLoading,
-        user: action.user,
-        facebookToken: action.facebookToken
+        user: action.user
       };
     case CHECK_LOGIN_FAILURE:
       return {
@@ -27,40 +26,38 @@ const authReducer = (state = authInitialState, action) => {
         loggedIn: action.loggedIn,
         isLoading: action.isLoading
       };
-    case LOGIN_GOOGLE_REQUEST:
+    case LOGIN_REQUEST:
       return {
         ...state,
         isLoading: action.isLoading
       };
-    case LOGIN_GOOGLE_SUCCESS:
+    case LOGIN_SUCCESS:
       return {
         ...state,
         loggedIn: action.loggedIn,
         isLoading: action.isLoading,
-        user: action.user,
-        facebookToken: action.facebookToken
+        user: action.user
       };
-    case LOGIN_GOOGLE_FAILURE:
+    case LOGIN_FAILURE:
       return {
         ...state,
         error: action.error,
         loggedIn: action.loggedIn,
         isLoading: action.isLoading
       };
-    case LOGIN_FACEBOOK_REQUEST:
+    case SIGNUP_REQUEST:
       return {
         ...state,
         isLoading: action.isLoading
       };
-    case LOGIN_FACEBOOK_SUCCESS:
+    case SIGNUP_SUCCESS:
       return {
         ...state,
         loggedIn: action.loggedIn,
         isLoading: action.isLoading,
-        user: action.user,
-        facebookToken: action.facebookToken
+        user: action.user
       };
-    case LOGIN_FACEBOOK_FAILURE:
+    case SIGNUP_FAILURE:
       return {
         ...state,
         error: action.error,

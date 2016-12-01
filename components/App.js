@@ -12,22 +12,24 @@ class App extends React.Component {
   }
 
   render() {
-    const initialRoute = Router.getRoute('friends');
+    let initialRoute;
+
+    if (this.props.auth.loggedIn) {
+      initialRoute = Router.getRoute('friends');
+    } else {
+      initialRoute = Router.getRoute('auth');
+    }
 
     if (this.props.auth.isLoading) {
       return <Loader />;
     }
 
-    if (!this.props.auth.loggedIn) {
-      return (
-        <StackNavigation
-          id="root"
-          initialRoute={initialRoute}
-        />
-      );
-    }
-
-    return <LoginForm />;
+    return (
+      <StackNavigation
+        id="root"
+        initialRoute={initialRoute}
+      />
+    );
   }
 }
 

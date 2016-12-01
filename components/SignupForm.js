@@ -5,10 +5,11 @@ import { withNavigation, NavigationStyles } from '@exponent/ex-navigation';
 import Colors from '../constants/Colors';
 import RowText from '../components/RowText';
 import RowInput from '../components/RowInput';
+import ErrorMessage from '../components/ErrorMessage';
 import { authActions } from '../state/actions';
 
 @withNavigation
-class LoginForm extends React.Component {
+class SignupForm extends React.Component {
   constructor(props) {
     super(props);
 
@@ -17,15 +18,15 @@ class LoginForm extends React.Component {
       password: ''
     };
 
-    this._login = this._login.bind(this);
+    this._signup = this._signup.bind(this);
     this._goBack = this._goBack.bind(this);
   }
 
-  _login() {
+  _signup() {
     const { username, password } = this.state;
 
     if (username.length && password.length) {
-      this.props.login(username, password);
+      this.props.signup(username, password);
     }
   }
 
@@ -36,6 +37,8 @@ class LoginForm extends React.Component {
   render() {
     return (
       <ScrollView style={styles.container}>
+        <ErrorMessage>Error message example</ErrorMessage>
+
         <RowInput
           color={'#FFF'}
           maxLength={10}
@@ -55,10 +58,10 @@ class LoginForm extends React.Component {
         />
         <RowText
           uppercase
-          text={'login!'}
+          text={'signup!'}
           color={'#FFF'}
           backgroundColor={Colors.red}
-          onPress={this._login}
+          onPress={this._signup}
         />
         <RowText
           uppercase
@@ -72,8 +75,8 @@ class LoginForm extends React.Component {
   }
 }
 
-LoginForm.propTypes = {
-  login: PropTypes.func
+SignupForm.propTypes = {
+  signup: PropTypes.func
 };
 
 const styles = StyleSheet.create({
@@ -182,9 +185,9 @@ const styles = StyleSheet.create({
   }
 });
 
-const login = authActions.login;
+const signup = authActions.signup;
 
 export default connect(
   null,
-  { login }
-)(LoginForm);
+  { signup }
+)(SignupForm);

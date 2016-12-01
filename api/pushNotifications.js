@@ -2,21 +2,29 @@ import { Permissions, Notifications } from 'exponent';
 
 const PUSH_ENDPOINT = 'https://powerful-sea-10435.herokuapp.com';
 
-const registerForPushNotifications = () => {
+const getPushNotificationsToken = () =>
   // Android remote notification permissions are granted during the app
   // install, so this will only ask on iOS
   Permissions.askAsync(Permissions.REMOTE_NOTIFICATIONS)
   .then((response) => {
+    console.log('RESPONSE', response);
     const { status } = response;
+
+    console.log('STATUS', status);
 
     // Stop here if the user did not grant permissions
     if (status !== 'granted') {
-      return;
+      console.log('NO GRANTED');
+      return 'no granted';
     }
 
-    sendPushNotification('welcome');
+    // Get the token that uniquely identifies this device
+    return Notifications.getExponentPushTokenAsync()
+    .then((token) => {
+      console.log('TOKEN', token);
+      return token;
+    });
   });
-};
 
 const photoUploadedPushNotification = () => {
   sendPushNotification('photo');
@@ -40,7 +48,7 @@ const sendPushNotification = (type) => {
 };
 
 const pushNotifications = {
-  registerForPushNotifications,
+  getPushNotificationsToken,
   photoUploadedPushNotification
 };
 

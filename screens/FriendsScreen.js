@@ -31,7 +31,7 @@ class FriendsScreen extends React.Component {
           icon={
             <Ionicons
               name={'ios-share-outline'}
-              style={{ color: '#FFF', fontSize: 35, transform: [{ rotate: '90deg' }] }}
+              style={{ color: '#FFF', fontSize: 35 }}
             />
           } offsetX={15}
           offsetY={0}

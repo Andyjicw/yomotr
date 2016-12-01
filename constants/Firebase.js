@@ -1,11 +1,11 @@
 import firebase from 'firebase';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyCfsZvCrxVnbtNO_iyGmLJTwKn-M6UozqQ',
-  authDomain: 'rmotrgram.firebaseapp.com',
-  databaseURL: 'https://rmotrgram.firebaseio.com',
-  storageBucket: 'rmotrgram.appspot.com',
-  messagingSenderId: '871135189855'
+  apiKey: 'AIzaSyCfw4QmA4L8D2hpozscQde2HqvvVQ5DDi4',
+  authDomain: 'yootr-d880b.firebaseapp.com',
+  databaseURL: 'https://yootr-d880b.firebaseio.com',
+  storageBucket: 'yootr-d880b.appspot.com',
+  messagingSenderId: '976103005689'
 };
 
 const firebaseApp = firebase.initializeApp(firebaseConfig);

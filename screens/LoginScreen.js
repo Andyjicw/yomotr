@@ -5,56 +5,27 @@ import { withNavigation, NavigationStyles } from '@exponent/ex-navigation';
 import ActionButton from 'react-native-action-button';
 import { Ionicons } from '@exponent/vector-icons';
 import Colors from '../constants/Colors';
-import Profile from '../components/Profile';
+import LoginForm from '../components/LoginForm';
 
 import { authActions } from '../state/actions';
 
-@withNavigation
-class ProfileScreen extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this._goToFriends = this._goToFriends.bind(this);
-  }
-
-  _goToFriends() {
-    this.props.navigator.pop();
-  }
-
+class LoginScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Profile />
-
-        <ActionButton
-          buttonColor={Colors.red}
-          icon={
-            <Ionicons
-              name={'ios-share-outline'}
-              style={{ color: '#FFF', fontSize: 35, transform: [{ rotate: '180deg' }] }}
-            />
-          }
-          offsetX={15}
-          offsetY={0}
-          hideShadow
-          onPress={this._goToFriends}
-        />
+        <LoginForm />
       </View>
     );
   }
 }
 
-ProfileScreen.route = {
+LoginScreen.route = {
   navigationBar: {
     visible: false
-  },
-  styles: {
-    ...NavigationStyles.FloatVertical,
-    gestures: null
   }
 };
 
-ProfileScreen.propTypes = {
+LoginScreen.propTypes = {
   logout: PropTypes.func
 };
 
@@ -73,4 +44,4 @@ const logout = authActions.logout;
 export default connect(
   null,
   { logout }
-)(ProfileScreen);
+)(LoginScreen);

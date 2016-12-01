@@ -39,7 +39,6 @@ export const comment = {
 export const auth = {
   loggedIn: null,
   isLoading: null,
-  user: null,
-  facebookToken: null,
+  username: null,
   error: ''
 };

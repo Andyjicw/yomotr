@@ -1,6 +1,6 @@
 import Exponent, { Notifications } from 'exponent';
 import React from 'react';
-import { Platform, StatusBar, StyleSheet,
+import { Platform, StatusBar, StyleSheet, AsyncStorage,
          View, Alert, Vibration } from 'react-native';
 import { NavigationContext, NavigationProvider } from '@exponent/ex-navigation';
 import { Provider as ReduxProvider } from 'react-redux';
@@ -13,6 +13,8 @@ import App from './components/App';
 class AppContainer extends React.Component {
   constructor(props) {
     super(props);
+
+    // AsyncStorage.clear();
 
     this.state = { appIsReady: false };
   }

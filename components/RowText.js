@@ -26,13 +26,11 @@ class RowText extends React.Component {
     } else {
       content = (
         <MontserratText
-          style={[
-            styles.option, {
-              color: selectedColor,
-              fontSize: fontSizes[selectedFontSize],
-              lineHeight: fontSizes[selectedFontSize] + 5
-            }
-          ]}
+          style={{
+            color: selectedColor,
+            fontSize: fontSizes[selectedFontSize],
+            lineHeight: fontSizes[selectedFontSize] + 5
+          }}
         >
           {this.props.uppercase ? this.props.text.toUpperCase() : this.props.text}
         </MontserratText>
@@ -69,10 +67,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: 100,
     padding: 6
-  },
-
-  option: {
-    color: '#FFF'
   }
 });
 

@@ -1,6 +1,10 @@
 import { AsyncStorage, Alert } from 'react-native';
 import pushNotifications from '../../api/pushNotifications';
+import firebaseApp from '../../constants/Firebase';
 import * as actionTypes from '../actionTypes';
+
+const firebaseRef = firebaseApp.database().ref();
+const firebaseAuth = firebaseApp.auth();
 
 export const isLoggedIn = () => (dispatch) => {
   dispatch({
@@ -13,7 +17,7 @@ export const isLoggedIn = () => (dispatch) => {
     const session = JSON.parse(response);
 
     if (session) {
-      pushNotifications.registerForPushNotifications();
+      // pushNotifications.registerForPushNotifications();
 
       dispatch({
         type: actionTypes.CHECK_LOGIN_SUCCESS,
@@ -56,11 +60,116 @@ export const logout = () => (dispatch) => {
   };
 
   Alert.alert(
-    'Log out on Rmotrgram?',
+    'Log out on YOmotr?',
     null,
     [
       { text: 'Cancel', onPress: () => {} },
       { text: 'Log out', onPress: doLogout }
     ]
   );
+};
+
+export const login = (username, password) => (dispatch) => {
+  const email = `${username}@yomtr.com`;
+
+  dispatch({
+    type: actionTypes.LOGIN_REQUEST,
+    isLoading: true
+  });
+
+  firebaseAuth.signInWithEmailAndPassword(email, password)
+  .then((response) => {
+    const session = {
+      user: username
+    };
+
+      // Save session
+    AsyncStorage.setItem('session', JSON.stringify(session))
+      .then(() => {
+        // pushNotifications.registerForPushNotifications()
+        // .then((pushToken) => {
+        //   console.log('PUSH TOKEN: ', pushToken);
+        // });
+
+        dispatch({
+          type: actionTypes.LOGIN_SUCCESS,
+          loggedIn: true,
+          isLoading: false,
+          user: username
+        });
+      }, (err) => {
+        dispatch({
+          type: actionTypes.LOGIN_FAILURE,
+          error: err,
+          loggedIn: false,
+          isLoading: false
+        });
+
+        Alert.alert(
+          'Error!',
+          err,
+          [{ text: 'OK', onPress: () => {} }],
+        );
+      });
+  })
+  .catch((err) => {
+    dispatch({
+      type: actionTypes.LOGIN_FAILURE,
+      error: err.message,
+      loggedIn: false,
+      isLoading: false
+    });
+  });
+};
+
+export const signup = (username, password) => (dispatch) => {
+  const email = `${username}@yomtr.com`;
+
+  dispatch({
+    type: actionTypes.SIGNUP_REQUEST,
+    isLoading: true
+  });
+
+  firebaseAuth.createUserWithEmailAndPassword(email, password)
+  .then((response) => {
+    const session = {
+      user: username
+    };
+
+      // Save session
+    AsyncStorage.setItem('session', JSON.stringify(session))
+      .then(() => {
+        console.log('SESSION SAVED!');
+
+        pushNotifications.getPushNotificationsToken();
+
+        dispatch({
+          type: actionTypes.LOGIN_SUCCESS,
+          loggedIn: true,
+          isLoading: false,
+          user: username
+        });
+      }, (err) => {
+        dispatch({
+          type: actionTypes.LOGIN_FAILURE,
+          error: err,
+          loggedIn: false,
+          isLoading: false
+        });
+
+        Alert.alert(
+          'Error!',
+          err,
+          [{ text: 'OK', onPress: () => {} }],
+        );
+      });
+  })
+  .catch((err) => {
+    dispatch({
+      type: actionTypes.LOGIN_FAILURE,
+      error: err.message,
+      loggedIn: false,
+      isLoading: false
+    });
+  });
 };

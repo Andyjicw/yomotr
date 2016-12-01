@@ -7,6 +7,16 @@ import Layout from '../constants/Layout';
 import { authActions } from '../state/actions';
 
 class FriendsList extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this._logout = this._logout.bind(this);
+  }
+
+  _logout() {
+    this.props.logout();
+  }
+
   _makeProfile() {
     const colorsOrder = [
       Colors.green2,
@@ -20,18 +30,10 @@ class FriendsList extends React.Component {
     ];
 
     const links = [
-      { text: 'user: me', fontSize: 'medium', onPress: () => {} },
-      { text: 'invite', onPress: () => {} },
-      { text: 'find friends', onPress: () => {} },
-      { text: 'index', onPress: () => {} },
-      { text: 'edit profile', onPress: () => {} },
-      { text: 'what is yo?', onPress: () => {} },
-      { text: 'unblock', onPress: () => {} },
-      { text: 'yo count: 24', onPress: () => {} },
-      { text: 'edit account', onPress: () => {} },
-      { text: 'feedback', onPress: () => {} },
-      { text: '+', onPress: () => {} },
-      { text: 'logout', onPress: () => {} }
+      { text: 'user: me', uppercase: true, fontSize: 'medium', onPress: () => {} },
+      { text: 'edit profile', uppercase: true, onPress: () => {} },
+      { text: 'yo count: 24', uppercase: true, onPress: () => {} },
+      { text: 'logout', uppercase: true, onPress: this._logout }
     ];
 
     return links.map((item, index) => {
@@ -46,7 +48,7 @@ class FriendsList extends React.Component {
     return (
       <RowText
         key={rowData.text}
-        uppercase
+        uppercase={rowData.uppercase}
         text={rowData.text}
         fontSize={rowData.fontSize}
         backgroundColor={rowData.backgroundColor}
@@ -65,8 +67,7 @@ class FriendsList extends React.Component {
 }
 
 FriendsList.propTypes = {
-  loginGoogle: PropTypes.func,
-  loginFacebook: PropTypes.func
+  logout: PropTypes.func
 };
 
 const styles = StyleSheet.create({
@@ -75,10 +76,9 @@ const styles = StyleSheet.create({
   }
 });
 
-const loginGoogle = authActions.loginGoogle;
-const loginFacebook = authActions.loginFacebook;
+const logout = authActions.logout;
 
 export default connect(
   null,
-  { loginGoogle, loginFacebook }
+  { logout }
 )(FriendsList);
