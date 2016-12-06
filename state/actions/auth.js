@@ -17,6 +17,16 @@ export const isLoggedIn = () => (dispatch) => {
     const session = JSON.parse(response);
 
     if (session) {
+      // check push token
+      pushNotifications.getPushNotificationsToken()
+      .then((token) => {
+        if (token !== 'denied') {
+          // update push token if necessary
+          firebaseRef.child('users_data').child(session.user)
+          .child('token').set(token);
+        }
+      });
+
       dispatch({
         type: actionTypes.CHECK_LOGIN_SUCCESS,
         loggedIn: true,
@@ -83,16 +93,6 @@ export const login = (username, password) => (dispatch) => {
     // Save session
     AsyncStorage.setItem('session', JSON.stringify(session))
     .then(() => {
-      // check push token
-      pushNotifications.getPushNotificationsToken()
-      .then((token) => {
-        if (token !== 'denied') {
-          // update push token if necessary
-          firebaseRef.child('user_data').child(session.user)
-          .child('token').set(token);
-        }
-      });
-
       dispatch({
         type: actionTypes.LOGIN_SUCCESS,
         loggedIn: true,

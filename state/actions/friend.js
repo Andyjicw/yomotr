@@ -1,5 +1,6 @@
 import moment from 'moment';
 import Exponent from 'exponent';
+import { Alert } from 'react-native';
 import { map, includes } from 'lodash';
 import update from 'react-addons-update';
 import pushNotifications from '../../api/pushNotifications';
@@ -18,37 +19,41 @@ export const addFriend = friend => (dispatch, getState) => {
 
   let friendsList = getState().friends.all;
   const { user } = getState().auth;
-  const friendObject = friend;
 
-  friendObject.id = `FRIEND:${moment().format()}`;
-  friendObject.username = user;
-  friendObject.creationDate = moment().format();
-  delete friendObject.isUploading;
-  delete friendObject.isUploaded;
-  delete friendObject.error;
+  friendsList = update(friendsList, { $push: [friend] });
 
-  friendsList = update(friendsList, { $push: [friendObject] });
+  firebaseRef.child('users_data').child(friend)
+  .once('value', (snapshot) => {
+    const exists = snapshot.val() !== null;
 
-  // Save friends
-  firebaseRef.child('user_data').child(user).child('friends')
-  .set(friendsList)
-  .then(() => {
-    // pushNotifications.photoUploadedPushNotification();
+    if (exists) {
+      // Save friends
+      firebaseRef.child('users_data').child(user).child('friends')
+      .set(friendsList)
+      .then(() => {
+        // pushNotifications.photoUploadedPushNotification();
 
-    dispatch({
-      type: actionTypes.ADD_FRIEND_SUCCESS,
-      isUploaded: true,
-      isUploading: false
-    });
+        dispatch({
+          type: actionTypes.ADD_FRIEND_SUCCESS,
+          isUploaded: true,
+          isUploading: false
+        });
 
-    dispatch(friendsActions.fetchFriends());
-  }, (err) => {
-    dispatch({
-      type: actionTypes.ADD_FRIEND_FAILURE,
-      isUploaded: false,
-      isUploading: false,
-      error: err
-    });
+        dispatch(friendsActions.fetchFriends());
+      }, (err) => {
+        dispatch({
+          type: actionTypes.ADD_FRIEND_FAILURE,
+          isUploaded: false,
+          isUploading: false,
+          error: err
+        });
+      });
+    } else {
+      Alert.alert(
+        'Wrong username!',
+        'Your friend username does not exist or it is mispelled'
+    );
+    }
   });
 };
 

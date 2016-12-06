@@ -12,7 +12,7 @@ export const fetchFriends = () => (dispatch, getState) => {
     isFetching: true
   });
 
-  firebaseRef.child('user_data').child(user).child('friends')
+  firebaseRef.child('users_data').child(user).child('friends')
   .once('value', (snapshot) => {
     const friends = [];
 
