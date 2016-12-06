@@ -17,8 +17,6 @@ export const isLoggedIn = () => (dispatch) => {
     const session = JSON.parse(response);
 
     if (session) {
-      // pushNotifications.registerForPushNotifications();
-
       dispatch({
         type: actionTypes.CHECK_LOGIN_SUCCESS,
         loggedIn: true,
@@ -82,37 +80,42 @@ export const login = (username, password) => (dispatch) => {
       user: username
     };
 
-      // Save session
+    // Save session
     AsyncStorage.setItem('session', JSON.stringify(session))
-      .then(() => {
-        // pushNotifications.registerForPushNotifications()
-        // .then((pushToken) => {
-        //   console.log('PUSH TOKEN: ', pushToken);
-        // });
-
-        dispatch({
-          type: actionTypes.LOGIN_SUCCESS,
-          loggedIn: true,
-          isLoading: false,
-          user: username,
-          error: '',
-          errorType: ''
-        });
-      }, (err) => {
-        dispatch({
-          type: actionTypes.LOGIN_FAILURE,
-          error: err,
-          errorType: 'login',
-          loggedIn: false,
-          isLoading: false
-        });
-
-        Alert.alert(
-          'Error!',
-          err,
-          [{ text: 'OK', onPress: () => {} }],
-        );
+    .then(() => {
+      // check push token
+      pushNotifications.getPushNotificationsToken()
+      .then((token) => {
+        if (token !== 'denied') {
+          // update push token if necessary
+          firebaseRef.child('user_data').child(session.user)
+          .child('token').set(token);
+        }
       });
+
+      dispatch({
+        type: actionTypes.LOGIN_SUCCESS,
+        loggedIn: true,
+        isLoading: false,
+        user: username,
+        error: '',
+        errorType: ''
+      });
+    }, (err) => {
+      dispatch({
+        type: actionTypes.LOGIN_FAILURE,
+        error: err,
+        errorType: 'login',
+        loggedIn: false,
+        isLoading: false
+      });
+
+      Alert.alert(
+        'Error!',
+        err,
+        [{ text: 'OK', onPress: () => {} }],
+      );
+    });
   })
   .catch((err) => {
     dispatch({

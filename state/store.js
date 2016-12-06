@@ -14,8 +14,8 @@ const createStoreWithNavigation = createNavigationEnabledStore({
 
 const rootReducer = combineReducers({
   // navigation: NavigationReducer,
-  // friends: friendsReducer,
-  // friend: friendReducer,
+  friends: friendsReducer,
+  friend: friendReducer,
   auth: authReducer
 });
 

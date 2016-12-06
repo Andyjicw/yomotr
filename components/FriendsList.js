@@ -5,34 +5,48 @@ import Prompt from 'react-native-prompt';
 import Colors from '../constants/Colors';
 import RowText from '../components/RowText';
 import Layout from '../constants/Layout';
-import { authActions } from '../state/actions';
+import { friendActions } from '../state/actions';
 
 class FriendsList extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     const ds = SwipeableListView.getNewDataSource();
 
     this.state = {
       promptVisible: false,
-      newFriend: '',
-      dataSource: ds.cloneWithRowsAndSections(this._genDataSource()),
-      rawDataSource: this._genDataSource()
+      dataSource: ds.cloneWithRowsAndSections(this._genDataSource(this.props.items)),
+      rawDataSource: this._genDataSource(this.props.items)
     };
 
     this._sendYo = this._sendYo.bind(this);
     this._addFriend = this._addFriend.bind(this);
+    this._setFriendUser = this._setFriendUser.bind(this);
+    this._genDataSource = this._genDataSource.bind(this);
     this._openFriendForm = this._openFriendForm.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const ds = SwipeableListView.getNewDataSource();
+    const newDataSource = this._genDataSource(nextProps.items);
+
+    this.setState({
+      dataSource: ds.cloneWithRowsAndSections(newDataSource),
+      rawDataSource: newDataSource
+    });
   }
 
   _openFriendForm() {
     this.setState({ promptVisible: true });
   }
 
+  _setFriendUser(user) {
+    this.props.setFriendUser(user);
+  }
+
   _addFriend(friend) {
     this.setState({ promptVisible: false });
-    // this.props.loadOnlineBoard(boardId);
-    // this.props.navigator.push('board');
+    this.props.addFriend(friend);
   }
 
   _sendYo(rowID) {
@@ -62,8 +76,7 @@ class FriendsList extends React.Component {
     });
   }
 
-  _genDataSource() {
-    const q = 5;
+  _genDataSource(data) {
     let row;
 
     const dataSource = {
@@ -84,21 +97,21 @@ class FriendsList extends React.Component {
     ];
 
     // friend rows
-    for (let i = 0; i < q; i++) {
+    data.forEach((friend, i) => {
       row = {
         id: i,
-        text: `friend #${i}`,
+        text: friend,
         backgroundColor: colorsOrder[i % colorsOrder.length]
       };
 
       dataSource.dataBlob.push(row);
-    }
+    });
 
     // add friend row
     row = {
       id: 'addFriend',
       text: '+',
-      backgroundColor: colorsOrder[q % colorsOrder.length]
+      backgroundColor: colorsOrder[data.length % colorsOrder.length]
     };
 
     dataSource.dataBlob.push(row);
@@ -150,7 +163,7 @@ class FriendsList extends React.Component {
 
   render() {
     return (
-      <View>
+      <View style={styles.container}>
         <SwipeableListView
           enableEmptySections
           dataSource={this.state.dataSource}
@@ -164,12 +177,12 @@ class FriendsList extends React.Component {
           placeholder="Friend username"
           submitText="Add friend"
           visible={this.state.promptVisible}
-          defaultValue={this.state.newFriend}
+          defaultValue={this.props.friend.username}
           onChangeText={(text) => {
-            if (this.state.newFriend.length <= 9) {
-              this.setState({ newFriend: text.toUpperCase() });
+            if (this.props.friend.username.length <= 9) {
+              this._setFriendUser(text.toUpperCase());
             } else {
-              this.setState({ newFriend: text.slice(0, 9) });
+              this._setFriendUser(text.slice(0, 9));
             }
           }}
           onCancel={() => this.setState({ promptVisible: false })}
@@ -181,20 +194,29 @@ class FriendsList extends React.Component {
 }
 
 FriendsList.propTypes = {
-  loginGoogle: PropTypes.func,
-  loginFacebook: PropTypes.func
+  items: PropTypes.array,
+  addFriend: PropTypes.func,
+  setFriendUser: PropTypes.func
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
+
   actionsContainer: {
     flexDirection: 'row'
   }
 });
 
-const loginGoogle = authActions.loginGoogle;
-const loginFacebook = authActions.loginFacebook;
+const mapStateToProps = state => ({
+  friend: state.friend
+});
+
+const addFriend = friendActions.addFriend;
+const setFriendUser = friendActions.setFriendUser;
 
 export default connect(
-  null,
-  { loginGoogle, loginFacebook }
+  mapStateToProps,
+  { addFriend, setFriendUser }
 )(FriendsList);

@@ -1,60 +1,40 @@
 import {
-  ADD_PHOTO_REQUEST,
-  ADD_PHOTO_SUCCESS,
-  ADD_PHOTO_FAILURE,
-  SET_PHOTO_DATA,
-  SET_PHOTO_SOURCE,
-  SET_PHOTO_CAPTION,
-  SET_PHOTO_LOCATION
+  ADD_FRIEND_REQUEST,
+  ADD_FRIEND_SUCCESS,
+  ADD_FRIEND_FAILURE,
+  SET_FRIEND_USER
 } from '../actionTypes';
-import { photo as photoInitialState } from '../initialState';
+import { friend as friendInitialState } from '../initialState';
 
-const photoReducer = (state = photoInitialState, action) => {
+const friendReducer = (state = friendInitialState, action) => {
   switch (action.type) {
-    case ADD_PHOTO_REQUEST:
+    case ADD_FRIEND_REQUEST:
       return {
         ...state,
         isUploaded: action.isUploaded,
         isUploading: action.isUploading
       };
-    case ADD_PHOTO_SUCCESS:
+    case ADD_FRIEND_SUCCESS:
       return {
-        ...photoInitialState,
+        ...friendInitialState,
         isUploaded: action.isUploaded,
         isUploading: action.isUploading
       };
-    case ADD_PHOTO_FAILURE:
+    case ADD_FRIEND_FAILURE:
       return {
         ...state,
         error: action.error,
         isUploaded: action.isUploaded,
         isUploading: action.isUploading
       };
-    case SET_PHOTO_DATA:
+    case SET_FRIEND_USER:
       return {
         ...state,
-        data: action.data
-      };
-    case SET_PHOTO_SOURCE:
-      return {
-        ...state,
-        source: action.source
-      };
-    case SET_PHOTO_CAPTION:
-      return {
-        ...state,
-        caption: action.caption
-      };
-    case SET_PHOTO_LOCATION:
-      return {
-        ...state,
-        locationName: action.locationName,
-        latitude: action.latitude,
-        longitude: action.longitude
+        username: action.user
       };
     default:
       return state;
   }
 };
 
-export default photoReducer;
+export default friendReducer;

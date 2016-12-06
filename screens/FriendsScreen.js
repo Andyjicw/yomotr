@@ -7,6 +7,8 @@ import { Ionicons } from '@exponent/vector-icons';
 import Colors from '../constants/Colors';
 import Router from '../navigation/Router';
 import FriendsList from '../components/FriendsList';
+import LoadingIndicator from '../components/LoadingIndicator';
+import { friendsActions } from '../state/actions';
 
 @withNavigation
 class FriendsScreen extends React.Component {
@@ -14,6 +16,10 @@ class FriendsScreen extends React.Component {
     super(props);
 
     this._goToProfile = this._goToProfile.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.fetchFriends();
   }
 
   componentDidUpdate() {
@@ -29,7 +35,7 @@ class FriendsScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <FriendsList />
+        <FriendsList items={this.props.friends.isFetching ? [] : this.props.friends.all} />
 
         <ActionButton
           style={{ transform: [{ rotate: '50deg' }] }}
@@ -43,6 +49,12 @@ class FriendsScreen extends React.Component {
           offsetY={0}
           hideShadow
           onPress={this._goToProfile}
+        />
+
+        <LoadingIndicator
+          visible={this.props.friends.isFetching}
+          message={'Getting your friends...'}
+          size={'large'}
         />
       </View>
     );
@@ -60,6 +72,8 @@ FriendsScreen.route = {
 
 FriendsScreen.propTypes = {
   auth: PropTypes.object,
+  friends: PropTypes.object,
+  fetchFriends: PropTypes.func,
   navigator: PropTypes.object
 };
 
@@ -74,10 +88,13 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => ({
-  auth: state.auth
+  auth: state.auth,
+  friends: state.friends
 });
+
+const { fetchFriends } = friendsActions;
 
 export default connect(
   mapStateToProps,
-  null
+  { fetchFriends }
 )(FriendsScreen);

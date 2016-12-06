@@ -1,47 +1,50 @@
 import moment from 'moment';
 import Exponent from 'exponent';
 import { map, includes } from 'lodash';
+import update from 'react-addons-update';
 import pushNotifications from '../../api/pushNotifications';
 import firebaseApp from '../../constants/Firebase';
 import * as actionTypes from '../actionTypes';
-import { photosActions } from './';
+import { friendsActions } from './';
 
 const firebaseRef = firebaseApp.database().ref();
 
-export const addPhoto = photo => (dispatch, getState) => {
+export const addFriend = friend => (dispatch, getState) => {
   dispatch({
-    type: actionTypes.ADD_PHOTO_REQUEST,
+    type: actionTypes.ADD_FRIEND_REQUEST,
     isUploaded: false,
     isUploading: true
   });
 
-  const user = getState().auth.user;
-  const photoObject = photo;
+  let friendsList = getState().friends.all;
+  const { user } = getState().auth;
+  const friendObject = friend;
 
-  photoObject.id = `PHOTO:${moment().format()}`;
-  photoObject.username = user.name;
-  photoObject.profilePicture = user.profilePicture;
-  photoObject.creationDate = moment().format();
-  delete photoObject.isUploading;
-  delete photoObject.isUploaded;
-  delete photoObject.error;
+  friendObject.id = `FRIEND:${moment().format()}`;
+  friendObject.username = user;
+  friendObject.creationDate = moment().format();
+  delete friendObject.isUploading;
+  delete friendObject.isUploaded;
+  delete friendObject.error;
 
-  // Save photo
-  firebaseRef.child('photos').child(photoObject.id)
-  .set(photoObject)
+  friendsList = update(friendsList, { $push: [friendObject] });
+
+  // Save friends
+  firebaseRef.child('user_data').child(user).child('friends')
+  .set(friendsList)
   .then(() => {
-    pushNotifications.photoUploadedPushNotification();
+    // pushNotifications.photoUploadedPushNotification();
 
     dispatch({
-      type: actionTypes.ADD_PHOTO_SUCCESS,
+      type: actionTypes.ADD_FRIEND_SUCCESS,
       isUploaded: true,
       isUploading: false
     });
 
-    dispatch(photosActions.fetchPhotos());
+    dispatch(friendsActions.fetchFriends());
   }, (err) => {
     dispatch({
-      type: actionTypes.ADD_PHOTO_FAILURE,
+      type: actionTypes.ADD_FRIEND_FAILURE,
       isUploaded: false,
       isUploading: false,
       error: err
@@ -49,23 +52,9 @@ export const addPhoto = photo => (dispatch, getState) => {
   });
 };
 
-export const setPhotoData = data => (dispatch) => {
+export const setFriendUser = user => (dispatch) => {
   dispatch({
-    type: actionTypes.SET_PHOTO_DATA,
-    data
-  });
-};
-
-export const setPhotoSource = source => (dispatch) => {
-  dispatch({
-    type: actionTypes.SET_PHOTO_SOURCE,
-    source
-  });
-};
-
-export const setPhotoCaption = caption => (dispatch) => {
-  dispatch({
-    type: actionTypes.SET_PHOTO_CAPTION,
-    caption
+    type: actionTypes.SET_FRIEND_USER,
+    user
   });
 };

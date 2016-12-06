@@ -30,8 +30,8 @@ class FriendsList extends React.Component {
 
     const links = [
       { text: `user: ${this.props.username}`, uppercase: true, fontSize: 'medium', onPress: () => {} },
-      { text: 'edit profile', uppercase: true, onPress: () => {} },
-      { text: 'yo count: 24', uppercase: true, onPress: () => {} },
+      // { text: 'edit profile', uppercase: true, onPress: () => {} },
+      // { text: 'yo count: 24', uppercase: true, onPress: () => {} },
       { text: 'logout', uppercase: true, onPress: this._logout }
     ];
 

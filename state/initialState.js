@@ -12,6 +12,8 @@ export const friend = {
   isSendingYo: false,
   lastYo: '',
   creationDate: '',
+  isUploaded: true,
+  isUploading: false,
   error: ''
 };
 

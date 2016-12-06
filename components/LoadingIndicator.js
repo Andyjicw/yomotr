@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     right: 0,
     left: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.6)'
+    backgroundColor: 'rgba(0,0,0,0.7)'
   },
 
   textContainer: {
