@@ -37,8 +37,8 @@ export const comment = {
 };
 
 export const auth = {
-  loggedIn: null,
-  isLoading: null,
-  username: null,
+  loggedIn: false,
+  isLoading: false,
+  user: '',
   error: ''
 };

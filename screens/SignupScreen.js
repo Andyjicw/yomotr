@@ -1,9 +1,6 @@
 import React, { PropTypes } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
-import { withNavigation, NavigationStyles } from '@exponent/ex-navigation';
-import ActionButton from 'react-native-action-button';
-import { Ionicons } from '@exponent/vector-icons';
 import Colors from '../constants/Colors';
 import SignupForm from '../components/SignupForm';
 

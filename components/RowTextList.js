@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
-import { View, Text, ScrollView,
-         ActivityIndicator, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import Colors from '../constants/Colors';
 import RowText from './RowText';
 

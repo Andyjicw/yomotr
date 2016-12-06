@@ -36,12 +36,15 @@ const authReducer = (state = authInitialState, action) => {
         ...state,
         loggedIn: action.loggedIn,
         isLoading: action.isLoading,
-        user: action.user
+        user: action.user,
+        error: action.error,
+        errorType: action.errorType
       };
     case LOGIN_FAILURE:
       return {
         ...state,
         error: action.error,
+        errorType: action.errorType,
         loggedIn: action.loggedIn,
         isLoading: action.isLoading
       };
@@ -55,12 +58,15 @@ const authReducer = (state = authInitialState, action) => {
         ...state,
         loggedIn: action.loggedIn,
         isLoading: action.isLoading,
-        user: action.user
+        user: action.user,
+        error: action.error,
+        errorType: action.errorType
       };
     case SIGNUP_FAILURE:
       return {
         ...state,
         error: action.error,
+        errorType: action.errorType,
         loggedIn: action.loggedIn,
         isLoading: action.isLoading
       };

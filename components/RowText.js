@@ -1,7 +1,5 @@
 import React, { PropTypes } from 'react';
-import { View, Text, TouchableOpacity,
-         ActivityIndicator, StyleSheet } from 'react-native';
-import Colors from '../constants/Colors';
+import { TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
 import MontserratText from './MontserratText';
 
 const fontSizes = {

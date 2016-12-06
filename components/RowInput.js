@@ -1,8 +1,6 @@
 import React, { PropTypes } from 'react';
-import { View, Text, TextInput, TouchableOpacity,
-         StyleSheet } from 'react-native';
-import { Font } from 'exponent';
-import Colors from '../constants/Colors';
+import { TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+// import { Font } from 'exponent';
 
 const fontSizes = {
   big: 44,

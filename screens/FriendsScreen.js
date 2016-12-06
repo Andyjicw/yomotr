@@ -1,12 +1,12 @@
 import React, { PropTypes } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
-import { withNavigation, NavigationStyles } from '@exponent/ex-navigation';
+import { withNavigation } from '@exponent/ex-navigation';
 import ActionButton from 'react-native-action-button';
 import { Ionicons } from '@exponent/vector-icons';
 import Colors from '../constants/Colors';
+import Router from '../navigation/Router';
 import FriendsList from '../components/FriendsList';
-import { authActions } from '../state/actions';
 
 @withNavigation
 class FriendsScreen extends React.Component {
@@ -14,6 +14,12 @@ class FriendsScreen extends React.Component {
     super(props);
 
     this._goToProfile = this._goToProfile.bind(this);
+  }
+
+  componentDidUpdate() {
+    if (!this.props.auth.loggedIn) {
+      this.props.navigator.immediatelyResetStack([Router.getRoute('auth', { cancelFetchLoginStatus: true })]);
+    }
   }
 
   _goToProfile() {
@@ -46,11 +52,15 @@ class FriendsScreen extends React.Component {
 FriendsScreen.route = {
   navigationBar: {
     visible: false
+  },
+  styles: {
+    gestures: null
   }
 };
 
 FriendsScreen.propTypes = {
-  logout: PropTypes.func
+  auth: PropTypes.object,
+  navigator: PropTypes.object
 };
 
 const styles = StyleSheet.create({
@@ -63,9 +73,11 @@ const styles = StyleSheet.create({
   }
 });
 
-const logout = authActions.logout;
+const mapStateToProps = state => ({
+  auth: state.auth
+});
 
 export default connect(
-  null,
-  { logout }
+  mapStateToProps,
+  null
 )(FriendsScreen);

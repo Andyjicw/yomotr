@@ -1,13 +1,11 @@
 import React, { PropTypes } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import { withNavigation, NavigationStyles } from '@exponent/ex-navigation';
 import ActionButton from 'react-native-action-button';
 import { Ionicons } from '@exponent/vector-icons';
 import Colors from '../constants/Colors';
 import Profile from '../components/Profile';
-
-import { authActions } from '../state/actions';
 
 @withNavigation
 class ProfileScreen extends React.Component {
@@ -24,7 +22,7 @@ class ProfileScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Profile />
+        <Profile username={this.props.auth.user} />
 
         <ActionButton
           buttonColor={Colors.red}
@@ -55,7 +53,8 @@ ProfileScreen.route = {
 };
 
 ProfileScreen.propTypes = {
-  logout: PropTypes.func
+  auth: PropTypes.object,
+  navigator: PropTypes.object
 };
 
 const styles = StyleSheet.create({
@@ -68,9 +67,11 @@ const styles = StyleSheet.create({
   }
 });
 
-const logout = authActions.logout;
+const mapStateToProps = state => ({
+  auth: state.auth
+});
 
 export default connect(
-  null,
-  { logout }
+  mapStateToProps,
+  null
 )(ProfileScreen);

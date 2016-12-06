@@ -23,8 +23,7 @@ export const isLoggedIn = () => (dispatch) => {
         type: actionTypes.CHECK_LOGIN_SUCCESS,
         loggedIn: true,
         isLoading: false,
-        user: session.user,
-        facebookToken: session.facebookToken
+        user: session.user
       });
     } else {
       dispatch({
@@ -95,12 +94,15 @@ export const login = (username, password) => (dispatch) => {
           type: actionTypes.LOGIN_SUCCESS,
           loggedIn: true,
           isLoading: false,
-          user: username
+          user: username,
+          error: '',
+          errorType: ''
         });
       }, (err) => {
         dispatch({
           type: actionTypes.LOGIN_FAILURE,
           error: err,
+          errorType: 'login',
           loggedIn: false,
           isLoading: false
         });
@@ -116,6 +118,7 @@ export const login = (username, password) => (dispatch) => {
     dispatch({
       type: actionTypes.LOGIN_FAILURE,
       error: err.message,
+      errorType: 'login',
       loggedIn: false,
       isLoading: false
     });
@@ -139,20 +142,21 @@ export const signup = (username, password) => (dispatch) => {
       // Save session
     AsyncStorage.setItem('session', JSON.stringify(session))
       .then(() => {
-        console.log('SESSION SAVED!');
-
         pushNotifications.getPushNotificationsToken();
 
         dispatch({
-          type: actionTypes.LOGIN_SUCCESS,
+          type: actionTypes.SIGNUP_SUCCESS,
           loggedIn: true,
           isLoading: false,
-          user: username
+          user: username,
+          error: '',
+          errorType: ''
         });
       }, (err) => {
         dispatch({
-          type: actionTypes.LOGIN_FAILURE,
+          type: actionTypes.SIGNUP_FAILURE,
           error: err,
+          errorType: 'signup',
           loggedIn: false,
           isLoading: false
         });
@@ -166,8 +170,9 @@ export const signup = (username, password) => (dispatch) => {
   })
   .catch((err) => {
     dispatch({
-      type: actionTypes.LOGIN_FAILURE,
+      type: actionTypes.SIGNUP_FAILURE,
       error: err.message,
+      errorType: 'signup',
       loggedIn: false,
       isLoading: false
     });

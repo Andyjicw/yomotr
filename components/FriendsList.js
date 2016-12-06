@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
-import { View, Text,
-        SwipeableListView, StyleSheet } from 'react-native';
+import { View, SwipeableListView, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import Colors from '../constants/Colors';
 import RowText from '../components/RowText';
@@ -50,7 +49,6 @@ class FriendsList extends React.Component {
 
   _genDataSource() {
     const q = 20;
-    const colors = 8;
     let row;
 
     const dataSource = {
@@ -115,7 +113,7 @@ class FriendsList extends React.Component {
           fontSize={'small'}
           text={'cancel'}
           backgroundColor={Colors.purple}
-          onPress={() => { console.log(); }}
+          onPress={() => {}}
         />
         <RowText
           uppercase

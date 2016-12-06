@@ -1,10 +1,11 @@
 import React, { PropTypes } from 'react';
-import { ScrollView, Text, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import { withNavigation, NavigationStyles } from '@exponent/ex-navigation';
 import Colors from '../constants/Colors';
+import Router from '../navigation/Router';
 import RowTextList from '../components/RowTextList';
-
+import LoadingIndicator from '../components/LoadingIndicator';
 import { authActions } from '../state/actions';
 
 @withNavigation
@@ -14,6 +15,27 @@ class AuthScreen extends React.Component {
 
     this._goToLoginScreen = this._goToLoginScreen.bind(this);
     this._goToSignupScreen = this._goToSignupScreen.bind(this);
+  }
+
+  componentDidMount() {
+    if (!this.props.route.params.cancelFetchLoginStatus) {
+      this.props.isLoggedIn();
+    }
+
+    switch (this.props.auth.errorType) {
+      case 'login':
+        return this._goToLoginScreen();
+      case 'signup':
+        return this._goToSignupScreen();
+      default:
+        return () => {};
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.props.auth.loggedIn) {
+      this.props.navigator.immediatelyResetStack([Router.getRoute('friends')]);
+    }
   }
 
   _goToLoginScreen() {
@@ -32,9 +54,17 @@ class AuthScreen extends React.Component {
     ];
 
     return (
-      <ScrollView style={styles.container}>
-        <RowTextList list={links} />
-      </ScrollView>
+      <View style={styles.container}>
+        <ScrollView>
+          <RowTextList list={links} />
+        </ScrollView>
+
+        <LoadingIndicator
+          visible={this.props.auth.isLoading}
+          message={'Just a moment...'}
+          size={'large'}
+        />
+      </View>
     );
   }
 }
@@ -42,22 +72,34 @@ class AuthScreen extends React.Component {
 AuthScreen.route = {
   navigationBar: {
     visible: false
+  },
+  styles: {
+    ...NavigationStyles.none,
+    gestures: null
   }
 };
 
 AuthScreen.propTypes = {
-  logout: PropTypes.func
+  auth: PropTypes.object,
+  route: PropTypes.object,
+  isLoggedIn: PropTypes.func,
+  navigator: PropTypes.object
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.purple }
+    backgroundColor: Colors.purple
+  }
 });
 
-const logout = authActions.logout;
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
+const isLoggedIn = authActions.isLoggedIn;
 
 export default connect(
-  null,
-  { logout }
+  mapStateToProps,
+  { isLoggedIn }
 )(AuthScreen);

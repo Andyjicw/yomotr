@@ -1,9 +1,8 @@
 import React, { PropTypes } from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import Colors from '../constants/Colors';
 import RowText from '../components/RowText';
-import Layout from '../constants/Layout';
 import { authActions } from '../state/actions';
 
 class FriendsList extends React.Component {
@@ -30,7 +29,7 @@ class FriendsList extends React.Component {
     ];
 
     const links = [
-      { text: 'user: me', uppercase: true, fontSize: 'medium', onPress: () => {} },
+      { text: `user: ${this.props.username}`, uppercase: true, fontSize: 'medium', onPress: () => {} },
       { text: 'edit profile', uppercase: true, onPress: () => {} },
       { text: 'yo count: 24', uppercase: true, onPress: () => {} },
       { text: 'logout', uppercase: true, onPress: this._logout }
@@ -67,14 +66,9 @@ class FriendsList extends React.Component {
 }
 
 FriendsList.propTypes = {
+  username: PropTypes.string,
   logout: PropTypes.func
 };
-
-const styles = StyleSheet.create({
-  actionsContainer: {
-    flexDirection: 'row'
-  }
-});
 
 const logout = authActions.logout;
 

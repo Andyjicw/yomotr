@@ -1,11 +1,12 @@
 import React, { PropTypes } from 'react';
-import { Text, ScrollView, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
-import { withNavigation, NavigationStyles } from '@exponent/ex-navigation';
+import { withNavigation } from '@exponent/ex-navigation';
 import Colors from '../constants/Colors';
 import RowText from '../components/RowText';
 import RowInput from '../components/RowInput';
 import ErrorMessage from '../components/ErrorMessage';
+import LoadingIndicator from '../components/LoadingIndicator';
 import { authActions } from '../state/actions';
 
 @withNavigation
@@ -25,9 +26,7 @@ class SignupForm extends React.Component {
   _signup() {
     const { username, password } = this.state;
 
-    if (username.length && password.length) {
-      this.props.signup(username, password);
-    }
+    this.props.signup(username, password);
   }
 
   _goBack() {
@@ -35,52 +34,73 @@ class SignupForm extends React.Component {
   }
 
   render() {
-    return (
-      <ScrollView style={styles.container}>
-        <ErrorMessage>Error message example</ErrorMessage>
+    let error;
 
-        <RowInput
-          color={'#FFF'}
-          maxLength={10}
-          placeholder={'username'}
-          autoCapitalize={'characters'}
-          backgroundColor={Colors.yellow}
-          onChangeText={username => this.setState({ username })}
+    if (this.props.auth.error) {
+      error = (
+        <ErrorMessage>
+          {this.props.auth.error}
+        </ErrorMessage>
+      );
+    }
+
+    return (
+      <View style={styles.container}>
+        <ScrollView>
+          {error}
+
+          <RowInput
+            color={'#FFF'}
+            maxLength={10}
+            placeholder={'username'}
+            autoCapitalize={'characters'}
+            backgroundColor={Colors.yellow}
+            onChangeText={username => this.setState({ username })}
+          />
+          <RowInput
+            color={'#FFF'}
+            maxLength={10}
+            secureTextEntry
+            placeholder={'password'}
+            keyboardType={'numeric'}
+            backgroundColor={Colors.green2}
+            onChangeText={password => this.setState({ password })}
+          />
+          <RowText
+            uppercase
+            text={'signup!'}
+            color={'#FFF'}
+            backgroundColor={Colors.red}
+            onPress={this._signup}
+          />
+          <RowText
+            uppercase
+            text={'go back'}
+            color={'#FFF'}
+            backgroundColor={Colors.blue3}
+            onPress={this._goBack}
+          />
+        </ScrollView>
+
+        <LoadingIndicator
+          visible={this.props.auth.isLoading}
+          message={'Just a moment...'}
+          size={'large'}
         />
-        <RowInput
-          color={'#FFF'}
-          maxLength={10}
-          secureTextEntry
-          placeholder={'password'}
-          keyboardType={'numeric'}
-          backgroundColor={Colors.green2}
-          onChangeText={password => this.setState({ password })}
-        />
-        <RowText
-          uppercase
-          text={'signup!'}
-          color={'#FFF'}
-          backgroundColor={Colors.red}
-          onPress={this._signup}
-        />
-        <RowText
-          uppercase
-          text={'go back'}
-          color={'#FFF'}
-          backgroundColor={Colors.blue3}
-          onPress={this._goBack}
-        />
-      </ScrollView>
+      </View>
     );
   }
 }
 
 SignupForm.propTypes = {
-  signup: PropTypes.func
+  auth: PropTypes.object,
+  signup: PropTypes.func,
+  navigator: PropTypes.object
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: Colors.purple
   },
 
@@ -185,9 +205,13 @@ const styles = StyleSheet.create({
   }
 });
 
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
 const signup = authActions.signup;
 
 export default connect(
-  null,
+  mapStateToProps,
   { signup }
 )(SignupForm);
