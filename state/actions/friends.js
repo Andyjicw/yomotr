@@ -1,4 +1,4 @@
-import { map } from 'lodash';
+import { filter } from 'lodash';
 import firebaseApp from '../../constants/Firebase';
 import * as actionTypes from '../actionTypes';
 
@@ -14,10 +14,12 @@ export const fetchFriends = () => (dispatch, getState) => {
 
   firebaseRef.child('users_data').child(user).child('friends')
   .once('value', (snapshot) => {
-    const friends = [];
+    const friends = filter(snapshot.val(), (val) => {
+      if (val !== null) {
+        return val;
+      }
 
-    map(snapshot.val(), (val) => {
-      friends.push(val);
+      return false;
     });
 
     dispatch({
