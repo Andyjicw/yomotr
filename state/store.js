@@ -3,9 +3,8 @@ import { createNavigationEnabledStore, NavigationReducer } from '@exponent/ex-na
 
 import thunk from 'redux-thunk';
 import devToolsEnhancer from 'remote-redux-devtools';
-import photosReducer from './reducers/photos';
-import photoReducer from './reducers/photo';
-import commentReducer from './reducers/comment';
+import friendsReducer from './reducers/friends';
+import friendReducer from './reducers/friend';
 import authReducer from './reducers/auth';
 
 const createStoreWithNavigation = createNavigationEnabledStore({
@@ -15,9 +14,8 @@ const createStoreWithNavigation = createNavigationEnabledStore({
 
 const rootReducer = combineReducers({
   // navigation: NavigationReducer,
-  photos: photosReducer,
-  photo: photoReducer,
-  comment: commentReducer,
+  // friends: friendsReducer,
+  // friend: friendReducer,
   auth: authReducer
 });
 

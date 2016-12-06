@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { View, SwipeableListView, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
+import Prompt from 'react-native-prompt';
 import Colors from '../constants/Colors';
 import RowText from '../components/RowText';
 import Layout from '../constants/Layout';
@@ -13,11 +14,25 @@ class FriendsList extends React.Component {
     const ds = SwipeableListView.getNewDataSource();
 
     this.state = {
+      promptVisible: false,
+      newFriend: '',
       dataSource: ds.cloneWithRowsAndSections(this._genDataSource()),
       rawDataSource: this._genDataSource()
     };
 
     this._sendYo = this._sendYo.bind(this);
+    this._addFriend = this._addFriend.bind(this);
+    this._openFriendForm = this._openFriendForm.bind(this);
+  }
+
+  _openFriendForm() {
+    this.setState({ promptVisible: true });
+  }
+
+  _addFriend(friend) {
+    this.setState({ promptVisible: false });
+    // this.props.loadOnlineBoard(boardId);
+    // this.props.navigator.push('board');
   }
 
   _sendYo(rowID) {
@@ -48,7 +63,7 @@ class FriendsList extends React.Component {
   }
 
   _genDataSource() {
-    const q = 20;
+    const q = 5;
     let row;
 
     const dataSource = {
@@ -98,7 +113,7 @@ class FriendsList extends React.Component {
         text={rowData.text}
         loading={rowData.loading}
         backgroundColor={rowData.backgroundColor}
-        onPress={() => sendYo(rowData.id)}
+        onPress={() => rowData.id === 'addFriend' ? this._openFriendForm() : sendYo(rowData.id)}
       />
     );
   }
@@ -135,13 +150,32 @@ class FriendsList extends React.Component {
 
   render() {
     return (
-      <SwipeableListView
-        enableEmptySections
-        dataSource={this.state.dataSource}
-        maxSwipeDistance={Layout.window.width}
-        renderQuickActions={this._renderQuickActions}
-        renderRow={(...args) => this._renderRow(...args, this._sendYo)}
-      />
+      <View>
+        <SwipeableListView
+          enableEmptySections
+          dataSource={this.state.dataSource}
+          maxSwipeDistance={Layout.window.width}
+          renderQuickActions={this._renderQuickActions}
+          renderRow={(...args) => this._renderRow(...args, this._sendYo)}
+        />
+
+        <Prompt
+          title="Enter your friend username"
+          placeholder="Friend username"
+          submitText="Add friend"
+          visible={this.state.promptVisible}
+          defaultValue={this.state.newFriend}
+          onChangeText={(text) => {
+            if (this.state.newFriend.length <= 9) {
+              this.setState({ newFriend: text.toUpperCase() });
+            } else {
+              this.setState({ newFriend: text.slice(0, 9) });
+            }
+          }}
+          onCancel={() => this.setState({ promptVisible: false })}
+          onSubmit={this._addFriend}
+        />
+      </View>
     );
   }
 }

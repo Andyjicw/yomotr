@@ -1,4 +1,3 @@
-export * as photosActions from './photos';
-export * as photoActions from './photo';
-export * as commentActions from './comment';
+export * as friendsActions from './friends';
+export * as friendActions from './friend';
 export * as authActions from './auth';

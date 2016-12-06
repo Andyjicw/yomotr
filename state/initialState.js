@@ -1,37 +1,16 @@
-export const photos = {
+export const friends = {
   all: [],
   isFetching: true,
   error: ''
 };
 
-export const photo = {
+export const friend = {
   id: null,
   username: '',
-  source: 'Camera roll',
-  caption: '',
-  data: '',
-  profilePicture: '',
-  location: {
-    name: null,
-    lat: null,
-    lng: null
-  },
-  comments: [],
-  likes: [],
-  isLiked: false,
-  isUploading: false,
-  isUploaded: false,
-  creationDate: '',
-  error: ''
-};
-
-export const comment = {
-  id: null,
-  photoId: null,
-  comments: [],
-  username: '',
-  text: '',
-  profilePicture: '',
+  pushToken: null,
+  isBlocked: false,
+  isSendingYo: false,
+  lastYo: '',
   creationDate: '',
   error: ''
 };
