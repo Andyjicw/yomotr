@@ -5,8 +5,7 @@ const PUSH_ENDPOINT = 'https://powerful-sea-10435.herokuapp.com';
 
 async function getPushNotificationsToken() {
   const { status } = await Permissions.getAsync(Permissions.REMOTE_NOTIFICATIONS);
-
-  if (status !== 'granted') {
+  if (status === 'denied') {
     Alert.alert(
       'Push permissions error!',
       'Please allow this app to use Push notifications from your phone configuration'
@@ -20,7 +19,7 @@ async function getPushNotificationsToken() {
   const { ask } = await Permissions.askAsync(Permissions.REMOTE_NOTIFICATIONS);
 
   // Stop here if the user did not grant permissions
-  if (ask !== 'granted') {
+  if (ask === 'denied') {
     return 'denied';
   }
 

@@ -55,7 +55,7 @@ class FriendsScreen extends React.Component {
         />
 
         <LoadingIndicator
-          visible={this.props.friends.isFetching}
+          visible={this.props.friends.isFetching || this.props.friends.isSendingYo}
           message={'Getting your friends...'}
           size={'large'}
         />
