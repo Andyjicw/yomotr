@@ -4,7 +4,7 @@ The simplest communication tool in the world. React Native. Exponent.
 
 https://exp.host/@test123/yomotr
 
-![yomotr](http://i.imgur.com/XXXXXXXXXXX.jpg)
+![yomotr](http://i.imgur.com/S06qH30.png)
 
 ---
 <p align="center">
