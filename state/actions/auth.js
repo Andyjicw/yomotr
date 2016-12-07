@@ -1,4 +1,5 @@
 import { AsyncStorage, Alert } from 'react-native';
+import moment from 'moment';
 import pushNotifications from '../../api/pushNotifications';
 import firebaseApp from '../../constants/Firebase';
 import * as actionTypes from '../actionTypes';
@@ -145,7 +146,8 @@ export const signup = (username, password) => (dispatch) => {
       // Save session
     AsyncStorage.setItem('session', JSON.stringify(session))
       .then(() => {
-        pushNotifications.getPushNotificationsToken();
+        firebaseRef.child('users_data').child(username).child('creationDate')
+        .set(moment().format());
 
         dispatch({
           type: actionTypes.SIGNUP_SUCCESS,
