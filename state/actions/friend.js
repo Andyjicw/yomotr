@@ -1,7 +1,7 @@
 import moment from 'moment';
 import Exponent from 'exponent';
 import { Alert } from 'react-native';
-import { map, includes } from 'lodash';
+import { includes } from 'lodash';
 import update from 'react-addons-update';
 import pushNotifications from '../../api/pushNotifications';
 import firebaseApp from '../../constants/Firebase';
@@ -20,41 +20,61 @@ export const addFriend = friend => (dispatch, getState) => {
   let friendsList = getState().friends.all;
   const { user } = getState().auth;
 
-  friendsList = update(friendsList, { $push: [friend] });
+  if (friend.length) {
+    firebaseRef.child('users_data').child(friend)
+    .once('value', (snapshot) => {
+      const exists = snapshot.val() !== null;
+      const same = user === friend;
 
-  firebaseRef.child('users_data').child(friend)
-  .once('value', (snapshot) => {
-    const exists = snapshot.val() !== null;
+      if (exists && !same) {
+        firebaseRef.child('users_data').child(user)
+        .once('value', (snapshot) => {
+          const alreadyAdded = includes(snapshot.val().friends, friend);
 
-    if (exists) {
-      // Save friends
-      firebaseRef.child('users_data').child(user).child('friends')
-      .set(friendsList)
-      .then(() => {
-        // pushNotifications.photoUploadedPushNotification();
+          if (!alreadyAdded) {
+            friendsList = update(friendsList, { $push: [friend] });
 
-        dispatch({
-          type: actionTypes.ADD_FRIEND_SUCCESS,
-          isUploaded: true,
-          isUploading: false
+            // Save friends
+            firebaseRef.child('users_data').child(user).child('friends')
+            .set(friendsList)
+            .then(() => {
+              // pushNotifications.photoUploadedPushNotification();
+
+              dispatch({
+                type: actionTypes.ADD_FRIEND_SUCCESS,
+                isUploaded: true,
+                isUploading: false
+              });
+
+              dispatch(friendsActions.fetchFriends());
+            }, (err) => {
+              dispatch({
+                type: actionTypes.ADD_FRIEND_FAILURE,
+                isUploaded: false,
+                isUploading: false,
+                error: err
+              });
+            });
+          } else if (alreadyAdded) {
+            Alert.alert(
+              'Friend already added!',
+              'The friend you are trying to add is already on your friends list'
+            );
+          }
         });
-
-        dispatch(friendsActions.fetchFriends());
-      }, (err) => {
-        dispatch({
-          type: actionTypes.ADD_FRIEND_FAILURE,
-          isUploaded: false,
-          isUploading: false,
-          error: err
-        });
-      });
-    } else {
-      Alert.alert(
-        'Wrong username!',
-        'Your friend username does not exist or it is mispelled'
-    );
-    }
-  });
+      } else if (!exists) {
+        Alert.alert(
+          'Wrong username!',
+          'Your friend username does not exist or it is mispelled'
+        );
+      } else if (same) {
+        Alert.alert(
+          'Wrong username!',
+          'Your can not add yourself as a friend'
+        );
+      }
+    });
+  }
 };
 
 export const setFriendUser = user => (dispatch) => {
