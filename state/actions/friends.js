@@ -1,5 +1,7 @@
 import { filter } from 'lodash';
+import { Alert } from 'react-native';
 import firebaseApp from '../../constants/Firebase';
+import pushNotifications from '../../api/pushNotifications';
 import * as actionTypes from '../actionTypes';
 
 const firebaseRef = firebaseApp.database().ref();
@@ -35,17 +37,26 @@ export const fetchFriends = () => (dispatch, getState) => {
     });
   });
 };
-//
-// export const likePhoto = photoID => (dispatch) => {
-//   dispatch({
-//     type: actionTypes.LIKE_PHOTO,
-//     photoID
-//   });
-// };
-//
-// export const unlikePhoto = photoID => (dispatch) => {
-//   dispatch({
-//     type: actionTypes.UNLIKE_PHOTO,
-//     photoID
-//   });
-// };
+
+export const sendYo = friend => (dispatch, getState) => {
+  dispatch({
+    type: actionTypes.SEND_YO_REQUEST,
+    isSendingYo: true
+  });
+
+  const { user } = getState().auth;
+
+  firebaseRef.child('users_data').child(friend)
+  .once('value', (snapshot) => {
+    const token = snapshot.val().token;
+
+    pushNotifications.sendYo(token, user);
+
+    dispatch({
+      type: actionTypes.SEND_YO_SUCCESS,
+      isSendingYo: false
+    });
+
+    Alert.alert(`YO sent to ${friend}`);
+  });
+};

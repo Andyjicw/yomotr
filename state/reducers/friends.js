@@ -1,13 +1,8 @@
 import {
-  FETCH_FRIENDS_REQUEST,
-  FETCH_FRIENDS_SUCCESS,
-  FETCH_FRIENDS_FAILURE
-  // LIKE_PHOTO,
-  // UNLIKE_PHOTO
+  FETCH_FRIENDS_REQUEST, FETCH_FRIENDS_SUCCESS, FETCH_FRIENDS_FAILURE,
+  SEND_YO_REQUEST, SEND_YO_SUCCESS
 } from '../actionTypes';
 import { friends as friendsInitialState } from '../initialState';
-
-let newFriendsList;
 
 const friendsReducer = (state = friendsInitialState, action) => {
   switch (action.type) {
@@ -28,38 +23,12 @@ const friendsReducer = (state = friendsInitialState, action) => {
         error: action.error,
         isFetching: action.isFetching
       };
-    // case LIKE_PHOTO:
-    //   newPhotosList = state.all;
-    //
-    //   newPhotosList.map((photo) => {
-    //     if (photo.id === action.photoID) {
-    //       // FIXME: shouln't reassing param
-    //       photo.isLiked = true;
-    //     }
-    //
-    //     return photo;
-    //   });
-    //
-    //   return {
-    //     ...state,
-    //     all: newPhotosList
-    //   };
-    // case UNLIKE_PHOTO:
-    //   newPhotosList = state.all;
-    //
-    //   newPhotosList.map((photo) => {
-    //     if (photo.id === action.photoID) {
-    //       // FIXME: shouln't reassing param
-    //       photo.isLiked = false;
-    //     }
-    //
-    //     return photo;
-    //   });
-    //
-    //   return {
-    //     ...state,
-    //     all: newPhotosList
-    //   };
+    case SEND_YO_REQUEST:
+    case SEND_YO_SUCCESS:
+      return {
+        ...state,
+        isSendingYo: action.isSendingYo
+      };
     default:
       return state;
   }

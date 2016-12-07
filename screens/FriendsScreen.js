@@ -35,7 +35,10 @@ class FriendsScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <FriendsList items={this.props.friends.isFetching ? [] : this.props.friends.all} />
+        <FriendsList
+          items={this.props.friends.isFetching ? [] : this.props.friends.all}
+          isSendingYo={this.props.friends.isSendingYo}
+        />
 
         <ActionButton
           style={{ transform: [{ rotate: '50deg' }] }}

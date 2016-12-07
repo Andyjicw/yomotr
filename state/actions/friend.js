@@ -1,9 +1,6 @@
-import moment from 'moment';
-import Exponent from 'exponent';
 import { Alert } from 'react-native';
 import { includes } from 'lodash';
 import update from 'react-addons-update';
-import pushNotifications from '../../api/pushNotifications';
 import firebaseApp from '../../constants/Firebase';
 import * as actionTypes from '../actionTypes';
 import { friendsActions } from './';
@@ -38,8 +35,6 @@ export const addFriend = friend => (dispatch, getState) => {
             firebaseRef.child('users_data').child(user).child('friends')
             .set(friendsList)
             .then(() => {
-              // pushNotifications.photoUploadedPushNotification();
-
               dispatch({
                 type: actionTypes.ADD_FRIEND_SUCCESS,
                 isUploaded: true,

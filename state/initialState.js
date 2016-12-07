@@ -1,6 +1,7 @@
 export const friends = {
   all: [],
   isFetching: true,
+  isSendingYo: false,
   error: ''
 };
 
@@ -9,7 +10,6 @@ export const friend = {
   username: '',
   pushToken: null,
   isBlocked: false,
-  isSendingYo: false,
   lastYo: '',
   creationDate: '',
   isUploaded: true,

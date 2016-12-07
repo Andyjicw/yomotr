@@ -5,7 +5,7 @@ import Prompt from 'react-native-prompt';
 import Colors from '../constants/Colors';
 import RowText from '../components/RowText';
 import Layout from '../constants/Layout';
-import { friendActions } from '../state/actions';
+import { friendActions, friendsActions } from '../state/actions';
 
 class FriendsList extends React.Component {
   constructor(props) {
@@ -27,13 +27,15 @@ class FriendsList extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const ds = SwipeableListView.getNewDataSource();
-    const newDataSource = this._genDataSource(nextProps.items);
+    if (!nextProps.isSendingYo) {
+      const ds = SwipeableListView.getNewDataSource();
+      const newDataSource = this._genDataSource(nextProps.items);
 
-    this.setState({
-      dataSource: ds.cloneWithRowsAndSections(newDataSource),
-      rawDataSource: newDataSource
-    });
+      this.setState({
+        dataSource: ds.cloneWithRowsAndSections(newDataSource),
+        rawDataSource: newDataSource
+      });
+    }
   }
 
   _openFriendForm() {
@@ -74,6 +76,8 @@ class FriendsList extends React.Component {
       dataSource: ds.cloneWithRowsAndSections(dataSource),
       rawDataSource: dataSource
     });
+
+    this.props.sendYo(this.props.items[rowID]);
   }
 
   _genDataSource(data) {
@@ -101,6 +105,7 @@ class FriendsList extends React.Component {
       row = {
         id: i,
         text: friend,
+        loading: false,
         backgroundColor: colorsOrder[i % colorsOrder.length]
       };
 
@@ -195,7 +200,10 @@ class FriendsList extends React.Component {
 
 FriendsList.propTypes = {
   items: PropTypes.array,
+  friend: PropTypes.object,
+  sendYo: PropTypes.func,
   addFriend: PropTypes.func,
+  isSendingYo: PropTypes.bool,
   setFriendUser: PropTypes.func
 };
 
@@ -215,8 +223,9 @@ const mapStateToProps = state => ({
 
 const addFriend = friendActions.addFriend;
 const setFriendUser = friendActions.setFriendUser;
+const sendYo = friendsActions.sendYo;
 
 export default connect(
   mapStateToProps,
-  { addFriend, setFriendUser }
+  { addFriend, setFriendUser, sendYo }
 )(FriendsList);

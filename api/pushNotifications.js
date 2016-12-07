@@ -30,30 +30,20 @@ async function getPushNotificationsToken() {
   return token;
 }
 
-const photoUploadedPushNotification = () => {
-  sendPushNotification('photo');
-};
-
-const sendPushNotification = (type) => {
-  // Get the token that uniquely identifies this device
-  Notifications.getExponentPushTokenAsync()
-  .then((response) => {
-    const token = response;
-
-    // POST the token to our backend so we can use it to send pushes from there
-    return fetch(`${PUSH_ENDPOINT}/${type}/${token}`, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      }
-    });
-  });
-};
+const sendYo = (token, from) => (
+  // POST the token to our backend so we can use it to send pushes from there
+   fetch(`${PUSH_ENDPOINT}/sendyo/${token}/${from}`, {
+     method: 'POST',
+     headers: {
+       Accept: 'application/json',
+       'Content-Type': 'application/json'
+     }
+   })
+);
 
 const pushNotifications = {
   getPushNotificationsToken,
-  photoUploadedPushNotification
+  sendYo
 };
 
 export default pushNotifications;
