@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import { TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-// import { Font } from 'exponent';
+import { Font } from 'exponent';
 
 const fontSizes = {
   big: 44,
@@ -22,7 +22,7 @@ class RowInput extends React.Component {
         <TextInput
           style={[
             styles.input, {
-              // ...Font.style('montserrat'),
+              ...Font.style('montserrat'),
               color: selectedColor,
               fontSize: fontSizes[selectedFontSize],
               lineHeight: fontSizes[selectedFontSize] + 5
