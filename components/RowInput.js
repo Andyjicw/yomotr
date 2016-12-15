@@ -36,6 +36,7 @@ class RowInput extends React.Component {
           onChangeText={this.props.onChangeText}
           autoCapitalize={this.props.autoCapitalize || 'none'}
           secureTextEntry={this.props.secureTextEntry}
+          underlineColorAndroid={'transparent'}
         />
       </TouchableOpacity>
     );
